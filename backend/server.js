@@ -13,6 +13,9 @@ const server = app.listen(5050, ()=>{
 const io = new Server(server);
 
 io.on("connection", (socket)=>{
-    console.log("user connected")
-    socket.on()
+  console.log("user connected");
+
+  socket.on("message", (data) => {
+    console.log("message received", data);
+  });
 })

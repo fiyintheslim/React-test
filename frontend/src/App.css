@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .App {
   text-align: center;
 }
@@ -41,4 +45,17 @@
   width:500px;
   height:700px;
   background:red
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #74737300;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
 }
