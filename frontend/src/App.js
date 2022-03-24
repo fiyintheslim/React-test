@@ -3,30 +3,35 @@ import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 
 function App() {
-  const socket = io("localhost:5050");
-  const [username, setUsername] = useState();
-  const [message, setMessage] = useState();
+  
+  const [username, setUsername] = useState("");
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+
   const user = useRef();
-
   const chatContainer = useRef();
-  useEffect(() => {
-    if (!username) {
-      setUsername(prompt("Enter your username", ""));
-    }
-    const oldMessages = localStorage.getItem("messages");
+  const socket = useRef();
 
-    if (oldMessages) {
-      setMessages(JSON.parse(oldMessages));
-    }
-  }, [username]);
-
-  useEffect(() => {
-    socket.on("message", (data) => {
+  if (socket.current) {
+    socket.current.on("message", (data) => {
+      console.log("Data received", data, messages);
       setMessages([...messages, data]);
       scroll(chatContainer);
       localStorage.setItem("messages", JSON.stringify(messages));
     });
+  }
+
+  useEffect(() => {
+    socket.current = io("localhost:5050");
+    //listen for socket events
+
+    //get older messages
+    const oldMessages = localStorage.getItem("messages");
+
+    if (oldMessages) {
+      console.log("Old messages", oldMessages);
+      setMessages(JSON.parse(oldMessages));
+    }
   }, []);
 
   const handleUser = (e) => {
@@ -41,17 +46,18 @@ function App() {
       time: Date.now(),
     };
     setMessages([...messages, data]);
-    socket.emit("message", data);
+    console.log("Just before sending", messages);
+    socket.current.emit("message", data);
     setMessage("");
     scroll(chatContainer);
-    localStorage.setItem("messages", JSON.stringify(messages));
+    //localStorage.setItem("messages", JSON.stringify(messages));
   };
   const scroll = (cont) => {
     setTimeout(() => {
-      cont.current.scrollTop = cont.current.scrollHeight;
+      if (cont.current) {
+        cont.current.scrollTop = cont.current.scrollHeight;
+      }
     }, 50);
-
-    setMessage();
   };
   return (
     <>
@@ -65,13 +71,14 @@ function App() {
             height: "100vh",
           }}
         >
-          <div className="chat-container rounded-lg relative">
+          <div className="chat-container rounded-lg relative overflow-hidden">
             <div className="sticky top-0 right-0 py-4 text-center bg-purple-700 font-bold">
               {username}
             </div>
-            <div className="pb-10 h-full overflow-y-scroll">
-              {messages.map((each) => (
+            <div ref={chatContainer} className="h-5/6 overflow-y-scroll">
+              {messages.map((each, i) => (
                 <p
+                  key={i}
                   className={`w-full my-1 flex flex-col ${
                     each.user === username ? "items-end" : "items-start"
                   }`}
