@@ -8,19 +8,16 @@ function App() {
   const [message, setMessage] = useState();
   const [messages, setMessages] = useState([]);
   const user = useRef();
-<<<<<<< HEAD
+
   const chatContainer = useRef();
-=======
->>>>>>> 0fa616afb63dc4599ae6018ed6ca96a631691a8d
   useEffect(() => {
     if (!username) {
       setUsername(prompt("Enter your username", ""));
     }
-<<<<<<< HEAD
     const oldMessages = localStorage.getItem("messages");
 
-    if(oldMessages){
-      setMessages(JSON.parse(oldMessages))
+    if (oldMessages) {
+      setMessages(JSON.parse(oldMessages));
     }
   }, [username]);
 
@@ -28,13 +25,8 @@ function App() {
     socket.on("message", (data) => {
       setMessages([...messages, data]);
       scroll(chatContainer);
+      localStorage.setItem("messages", JSON.stringify(messages));
     });
-=======
-  }, [username]);
-
-  useEffect(() => {
-    socket.emit("message", "Message sent");
->>>>>>> 0fa616afb63dc4599ae6018ed6ca96a631691a8d
   }, []);
 
   const handleUser = (e) => {
@@ -50,18 +42,16 @@ function App() {
     };
     setMessages([...messages, data]);
     socket.emit("message", data);
-<<<<<<< HEAD
     setMessage("");
     scroll(chatContainer);
-    localStorage.setItem("messages", JSON.stringify(messages))
+    localStorage.setItem("messages", JSON.stringify(messages));
   };
   const scroll = (cont) => {
     setTimeout(() => {
       cont.current.scrollTop = cont.current.scrollHeight;
     }, 50);
-=======
+
     setMessage();
->>>>>>> 0fa616afb63dc4599ae6018ed6ca96a631691a8d
   };
   return (
     <>
@@ -75,24 +65,6 @@ function App() {
             height: "100vh",
           }}
         >
-<<<<<<< HEAD
-          <div className="chat-container rounded-lg relative overflow-hidden">
-            <div className="sticky top-0 right-0 py-4 text-center bg-purple-700 font-bold">
-              {username}
-            </div>
-            <div ref={chatContainer} className="h-5/6 overflow-y-scroll">
-              {messages.map((each) => (
-                <p
-                  className={`w-full px-2 my-1 flex flex-col ${
-                    each.user === username ? "items-end" : "items-start"
-                  }`}
-                >
-                  <span className="text-xs text-slate-500 my-1">
-                    {each.user}
-                  </span>
-                  <span
-                    className={`p-2 rounded-lg ${
-=======
           <div className="chat-container rounded-lg relative">
             <div className="sticky top-0 right-0 py-4 text-center bg-purple-700 font-bold">
               {username}
@@ -106,7 +78,6 @@ function App() {
                 >
                   <span
                     className={`p-2 rounded-full ${
->>>>>>> 0fa616afb63dc4599ae6018ed6ca96a631691a8d
                       each.user === username
                         ? "bg-indigo-500 rounded-br-none"
                         : "bg-violet-500 rounded-bl-none"
@@ -163,6 +134,7 @@ function App() {
       )}
     </>
   );
+  
 }
 
 export default App;
