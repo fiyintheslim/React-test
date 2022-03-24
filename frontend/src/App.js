@@ -51,13 +51,33 @@ function App() {
             </div>
             <div className="pb-10 h-full overflow-y-scroll">
               {messages.map((each) => (
-                <p>{each.content}</p>
+                <p
+                  className={`w-full my-1 flex flex-col ${
+                    each.user === username ? "items-end" : "items-start"
+                  }`}
+                >
+                  <span
+                    className={`p-2 rounded-full ${
+                      each.user === username
+                        ? "bg-indigo-500 rounded-br-none"
+                        : "bg-violet-500 rounded-bl-none"
+                    }`}
+                  >
+                    {each.content}
+                  </span>
+                  <span className="text-xs text-slate-500">{`${String(
+                    new Date(each.time).getHours()
+                  ).padStart(2, "0")}:${String(
+                    new Date(each.time).getMinutes()
+                  ).padStart(2, "0")}`}</span>
+                </p>
               ))}
             </div>
             <div className="flex items-center bg-purple-700 absolute w-full bottom-0 right-0 p-3">
               <input
                 type="text"
                 className="rounded-full grow py-1 px-3 outline-none"
+                value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {

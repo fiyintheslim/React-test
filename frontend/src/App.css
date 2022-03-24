@@ -44,7 +44,7 @@
 .chat-container{
   width:500px;
   height:700px;
-  background:red
+  background:rgb(214, 214, 214)
 }
 ::-webkit-scrollbar {
   width: 10px;
